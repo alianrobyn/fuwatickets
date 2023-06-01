@@ -1,0 +1,139 @@
+﻿@page "/basket"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext DbContext
+@inject ISnackbar Snackbar
+
+<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Tertiary" Href="@item.Href">@item.Text.ToUpper()</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+<PageTitle>Basket</PageTitle>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Кошик</MudText>
+
+<MudTable Items="GetTicket.Take(1)" Hover="true" Elevation="0">
+    <HeaderContent>
+        <MudTh>Прізвище</MudTh>
+        <MudTh>Ім'я</MudTh>
+        <MudTh>№ потяга</MudTh>
+        <MudTh>Звідки / Куди</MudTh>
+        <MudTh>Дата</MudTh>
+        <MudTh>Відправлення / Прибуття</MudTh>
+        <MudTh>Сума, грн</MudTh>
+        <MudTh>Тип документа</MudTh>
+        <MudTh>Послуги</MudTh>
+        <MudTh>Дії</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Прізвище">Шевченко</MudTd>
+        <MudTd DataLabel="Ім'я">Юлія</MudTd>
+        <MudTd DataLabel="№ потяга">13</MudTd>
+        <MudTd DataLabel="Звідки / Куди">Київ / Білгород</MudTd>
+        <MudTd DataLabel="Дата">2023-05-26</MudTd>
+        <MudTd DataLabel="Відправлення / Прибуття">2:45 - 4:30</MudTd>
+        <MudTd DataLabel="Сума, грн">280</MudTd>
+        <MudTd DataLabel="Тип документа">Студентський</MudTd>
+        <MudTd DataLabel="Послуги">Настільна білизна, Напій, Бізнес-ланч</MudTd>
+        <MudTd DataLabel="Дії">
+            <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Small" Color="Color.Inherit" OnClick="p" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Inherit" OnClick="() => DeleteData(context)"></MudIconButton> <br />
+        </MudTd>
+    </RowTemplate>
+    <LoadingContent>
+        <MudText>Завантаження...</MudText>
+    </LoadingContent>
+</MudTable>
+
+@*@if (trainsbd == null)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else
+{
+    <MudTable Items="trainsbd" Hover="true" SortLabel="Sort By" Elevation="0">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Surname!)">Прізвище</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Name!)">Ім'я</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.N)">№ потяга</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Z_K!)">Звідки / Куди</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TrainsBD, object>(x=>x.Date)">Дата</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.V_P!)">Відправлення / Прибуття</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Sum)">Сума, грн</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Type!)">Тип документа</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Service!)">Послуги</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Action!)">Дії</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Прізвище">@context.Surname</MudTd>
+            <MudTd DataLabel="Ім'я">@context.Name</MudTd>
+            <MudTd DataLabel="№ потяга">@context.N</MudTd>
+            <MudTd DataLabel="Звідки / Куди">@context.Z_K</MudTd>
+            <MudTd DataLabel="Дата">@context.Date</MudTd>
+            <MudTd DataLabel="Відправлення / Прибуття">@context.V_P</MudTd>
+            <MudTd DataLabel="Сума, грн" >@context.Sum</MudTd>
+            <MudTd DataLabel="Тип документа">@context.Type</MudTd>
+            <MudTd DataLabel="Послуги">@context.Service</MudTd>
+            <MudTd DataLabel="Дії">
+                <MudLink Href="" Color="Color.Tertiary" Underline="Underline.Always">Скасувати</MudLink> <br />
+                <MudLink Href="payment" Color="Color.Tertiary" Underline="Underline.Always">Замовити</MudLink> 
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{5, 10, 50}" />
+        </PagerContent>
+    </MudTable>
+}
+*@
+
+@code {
+    //private TrainsBD[]? trainsbd;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    trainsbd = await TrainsbdService.GetTrainsbdAsync(DateTime.Now);
+    //}
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("← До оформлення квитків", href: "issuing_tickets"),
+    };
+
+    void d()
+    {
+        NavManager.NavigateTo("/");
+    }
+
+    List<Ticket> GetTicket = new List<Ticket>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetTicket = await DbContext.Tickets.ToListAsync();
+    }
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+    private async Task DeleteData(Ticket ticket)
+    {
+        bool result = (await DialogService.ShowMessageBox(
+        "Підтвердження скасування замовлення квитка",
+        "Ви впевнені, що хочете скасувати замовлення цього білета?",
+        yesText: "Скасувати замовлення",
+        noText: "Не скасовувати")) ?? false;
+
+        if (result)
+        {
+            DbContext.Remove(ticket);
+            DbContext.Tickets.Remove(ticket);
+            await DbContext.SaveChangesAsync();
+            Snackbar.Add("Зміни збережено, Severity.Success");
+        }
+    }
+    void p()
+    {
+        NavManager.NavigateTo("payment");
+    }
+}

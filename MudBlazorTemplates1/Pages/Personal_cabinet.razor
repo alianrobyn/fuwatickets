@@ -1,0 +1,224 @@
+﻿@page "/personal_cabinet"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext DbContext
+@inject ISnackbar Snackbar
+
+<PageTitle>Personal_cabinet.razor</PageTitle>
+
+<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Tertiary" Href="@item.Href">@item.Text.ToUpper()</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Особистий кабінет</MudText>
+
+<br /><br />
+
+<MudStack AlignItems="AlignItems.Center">
+ <MudTabs Rounded="true" Outlined="true" Color="Color.Tertiary" Centered>
+        <MudTabPanel Text="Особисті дані">
+
+        <br /><br />
+
+        <MudStack AlignItems="AlignItems.Center">
+        <MudItem xs="10">
+            <MudTextField @bind-Value="@element.Email" Label="Телефон" Variant="Variant.Outlined" Margin="Margin.Dense"  Mask="@emailMask"/>
+            <MudTextField @bind-Value="@element.Password" Label="Пароль" Variant="Variant.Outlined" Margin="Margin.Dense" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+            <MudTextField @bind-Value="@element.Password1" Label="Підтвердіть пароль" Variant="Variant.Outlined" Margin="Margin.Dense" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+            <MudTextField @bind-Value="@element.Surname" Label="Прізвище" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@element.Name" Label="Ім'я" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@element.Phone" Label="Телефон" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        </MudItem>
+
+@*        <MudStack Row="true">
+             <MudCheckBox @bind-Checked="@Label_CheckBox1" Label="Я студент" Color="Color.Tertiary"></MudCheckBox>
+             <MudCheckBox @bind-Checked="@Label_CheckBox2" Label="Я пільговик" Color="Color.Tertiary"></MudCheckBox>
+        </MudStack>*@
+
+         <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="u1" Color="Color.Tertiary">Зберегти</MudButton>
+
+                <MudMessageBox @ref="mbox" CancelText="Не зберігати">
+                    <MessageContent>
+                        Зберегти зміни, внесені в особисті дані?
+                    </MessageContent>
+                    <YesButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="u2">Зберегти</MudButton>
+                    </YesButton>
+                </MudMessageBox>
+
+         </MudStack>
+
+    </MudTabPanel>
+    <MudTabPanel Text="Мої квитки">
+
+            <MudTable Items="GetTicket" Hover="true" Elevation="0">
+                <HeaderContent>
+                    <MudTh>Статус</MudTh>
+                    <MudTh>Прізвище</MudTh>
+                    <MudTh>Ім'я</MudTh>
+                    <MudTh>№ потяга</MudTh>
+                    <MudTh>Звідки / Куди</MudTh>
+                    <MudTh>Дата</MudTh>
+                    <MudTh>Відправлення / Прибуття</MudTh>
+                    <MudTh>Тип документа</MudTh>
+                    <MudTh>Послуги</MudTh>
+                    <MudTh>Сума, грн</MudTh>
+                    <MudTh>Дії</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Статус">@context.Status</MudTd>
+                    <MudTd DataLabel="Прізвище">@context.Surname</MudTd>
+                    <MudTd DataLabel="Ім'я">@context.Name</MudTd>
+                    <MudTd DataLabel="№ потяга">@context.Id</MudTd>
+                    <MudTd DataLabel="Звідки / Куди">@context.Z_K</MudTd>
+                    <MudTd DataLabel="Дата">@context.Date</MudTd>
+                    <MudTd DataLabel="Відправлення / Прибуття">@context.V_P</MudTd>
+                    <MudTd DataLabel="Тип документа">@context.Type</MudTd>
+                    <MudTd DataLabel="Послуги">@context.Service</MudTd>
+                    <MudTd DataLabel="Сума, грн">@context.Service</MudTd>
+                    <MudTd DataLabel="Дії">
+                        <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Small" Color="Color.Inherit" OnClick="p" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Inherit" OnClick="() => DeleteData(context)"></MudIconButton> <br />
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{10, 50}" />
+                </PagerContent>
+                <LoadingContent>
+                    <MudText>Завантаження...</MudText>
+                </LoadingContent>
+            </MudTable>
+    </MudTabPanel>
+</MudTabs>
+</MudStack>
+
+@code {
+
+    MudMessageBox mbox { get; set; } = default!;
+
+    private async void u1()
+    {
+        bool? result = await mbox.Show();
+    }
+
+    void u2()
+    {
+        NavManager.NavigateTo("/");
+        /*тут треба щоб зміни зберігалися*/
+    }
+
+    //public bool Label_CheckBox1 { get; set; } = false;
+    //public bool Label_CheckBox2 { get; set; } = false;
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("← На головну", href: "#"),
+    };
+
+    S element = new S { Email = "july.shev.ko@gmail.com", Password = "june3780", Password1 = "june3780", Surname = "Шевченко", Name = "Юлія", Phone = "+380662055735" };
+
+    public class S
+    {
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? Password1 { get; set; }
+        public string? Surname { get; set; }
+        public string? Name { get; set; }
+        public string? Phone { get; set; }
+    }
+
+    private User? User { get; set; }
+
+    //public Personal_cabinet(User user)
+    //{
+    //    User = user;
+    //}
+
+    List<Ticket> GetTicket = new List<Ticket>();
+    List<User> GetUser = new List<User>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetTicket = await DbContext.Tickets.ToListAsync();
+        GetUser = await DbContext.Users.ToListAsync();
+    }
+
+    //public string? UserId { get; set; }
+
+    //private async Task LoadDataAsync()
+    //{
+    //    var state = await _stateProvider.GetAuthenticationStateAsync();
+    //    var user = state.User;
+    //    _profileModel.Email = user.GetEmail();
+    //    _profileModel.Surname = user.GetSurname();
+    //    _profileModel.Name = user.GetName();
+    //    _profileModel.PhoneNumber = user.GetPhoneNumber();
+    //    UserId = user.GetUserId();
+    //}
+
+    //public class MyController : Controller
+    //{
+    //    private readonly UserManager<S> _userManager;
+    //    private User user;
+
+    //    public MyController(UserManager<S> userManager)
+    //    {
+    //        _userManager = userManager;
+    //    }
+    //}
+
+    //protected override void OnInitialized()
+    //{
+    //    var userId = this._userManager.GetUserId(User);
+    //    User = DbContext.Users.FirstOrDefault(u => u.ID == userId);
+    //}
+
+    public IMask emailMask = RegexMask.Email();
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+    private async Task DeleteData(Ticket ticket)
+    {
+        bool result = (await DialogService.ShowMessageBox(
+        "Підтвердження скасування замовлення квитка",
+        "Ви впевнені, що хочете скасувати замовлення цього білета?",
+        yesText: "Скасувати замовлення",
+        noText: "Не скасовувати")) ?? false;
+
+        if (result)
+        {
+            DbContext.Remove(ticket);
+            DbContext.Tickets.Remove(ticket);
+            await DbContext.SaveChangesAsync();
+            Snackbar.Add("Зміни збережено, Severity.Success");
+        }
+    }
+
+    void p()
+    {
+        NavManager.NavigateTo("payment");
+    }
+}

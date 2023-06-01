@@ -1,0 +1,34 @@
+﻿@page "/"
+@namespace MudTrain.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />
+
+@*<script>
+    window.takeScreenshot = function () {
+        return new Promise(function (resolve, reject) {
+            try {
+                // Create a canvas element to draw the screenshot
+                var canvas = document.createElement('canvas');
+                var context = canvas.getContext('2d');
+
+                // Set the canvas dimensions to the screen size
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                // Draw the current screen onto the canvas
+                context.drawImage(window, 0, 0, window.innerWidth, window.innerHeight);
+
+                // Get the base64 representation of the image
+                var imageData = canvas.toDataURL('image/png');
+
+                resolve(imageData);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+</script>*@

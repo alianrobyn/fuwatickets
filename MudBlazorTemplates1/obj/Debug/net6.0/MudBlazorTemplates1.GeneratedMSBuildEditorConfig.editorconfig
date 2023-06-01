@@ -1,0 +1,81 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = MudBlazorTemplates1
+build_property.RootNamespace = MudBlazorTemplates1
+build_property.ProjectDir = C:\Users\Alian Robyn\source\repos\MudBlazorTemplates1\MudBlazorTemplates1\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Alian Robyn\source\repos\MudBlazorTemplates1\MudBlazorTemplates1
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Basket.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmFza2V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Issuing_tickets.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSXNzdWluZ190aWNrZXRzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Payment.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF5bWVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Personal_cabinet.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGVyc29uYWxfY2FiaW5ldC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Registration.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0cmF0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Success.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3VjY2Vzcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/View.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmlldy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alian Robyn/source/repos/MudBlazorTemplates1/MudBlazorTemplates1/Pages/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,224 @@
+﻿@page "/"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext DbContext
+
+<PageTitle>Index</PageTitle>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Головна</MudText>
+<br />
+<br />
+
+<MudStack Row="true">
+	<MudTextField T="string" @bind-Value="@element.Zvidky" Label="Звідки" Variant="Variant.Outlined" Margin="Margin.Dense" />
+@*	<MudIconButton Icon="@Icons.Material.Filled.SyncAlt" Color="Color.Inherit" Edge="Edge.Start" OnClick="SwapValues" />
+*@	<MudTextField @bind-Value="@element.Kudy" Label="Куди" Variant="Variant.Outlined" Margin="Margin.Dense" />
+</MudStack>
+<br />
+@*<MudItem xs="3">
+	<MudTextField @bind-Value="@element.Data" Format="yyyy-MM-dd" Label="Дата відправлення" Variant="Variant.Outlined" Margin="Margin.Dense" InputType="InputType.Date" />
+</MudItem>*@
+<br />
+
+<div class="d-flex align-end justify-space-between mud-width-full">
+	<div class="d-flex flex-column">
+		<MudText><b>Звідки:</b> @element.Zvidky</MudText>
+		<MudText><b>Куди:</b> @element.Kudy</MudText>
+@*		<MudText><b>Дата відправлення:</b> @element.Data.ToShortDateString()</MudText>
+*@	</div>
+
+@*	<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="@k" Color="Color.Tertiary">Кнопка</MudButton>
+*@
+@*	<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="s" Color="Color.Tertiary">Пошук квитків</MudButton>
+*@	
+@*	<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="p" Color="Color.Tertiary">Оплата</MudButton>
+	<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="i" Color="Color.Tertiary">Оформл</MudButton>
+*@
+    <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="pc" Color="Color.Tertiary">kab</MudButton>
+    <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="sus" Color="Color.Tertiary">sus</MudButton>
+
+</div>
+
+@*<div style="min-width:200px;">
+    <MudLink href="/issuing_tickets?selectedItemId=@selectedItem1?.ID" Inline="true" Class="align-self-center">Selected1: @selectedItem1?.Z_K</MudLink>
+</div>*@
+
+<br />
+
+<MudTable FixedHeader="@fixed_header" Filter="new Func<Train,bool>(FilterFunc)" Items="GetTrain" Hover="true" Elevation="0" @bind-SelectedItem="selectedItem1">
+        <HeaderContent>
+            <MudTh>№ потяга</MudTh>
+            <MudTh>Звідки / Куди</MudTh>
+            <MudTh>Дата</MudTh>
+            <MudTh>Відправлення / Прибуття</MudTh>
+            <MudTh>Вільних місць</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="№ потяга">@context.ID</MudTd>
+            <MudTd DataLabel="Звідки / Куди">@context.Z_K</MudTd>
+            <MudTd DataLabel="Дата">@context.Date</MudTd>
+            <MudTd DataLabel="Відправлення / Прибуття">@context.V_P</MudTd>
+        <MudTd DataLabel="Вільних місць">
+                <MudLink Href="issuing_tickets" Color="Color.Tertiary" Underline="Underline.Always">@context.VM</MudLink>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>На Ваш запит не було знайдено жодного маршруту.</MudText>
+            <MudText>Переконайтеся, що всі слова написані правильно.</MudText>
+            <MudText>Якщо помилок не було виявлено - по заданому Вами напрямку місць немає, але ви можете переглянути маршрути з пересадкою.</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Завантаження...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{10, 20}" />
+        </PagerContent>
+    </MudTable>
+
+<MudStack AlignItems="AlignItems.Center">
+	<MudStack Row="true">
+        <MudLink Href="" Color="Color.Tertiary">UA</MudLink>
+        <MudLink Color="Color.Tertiary">|</MudLink>
+        <MudLink Href="ru" Color="Color.Tertiary">RU</MudLink>
+	</MudStack>
+</MudStack>
+
+@code {
+
+    bool fixed_header = true;
+
+    //private void SwapValues()
+    //{
+    //    string? temp = element.Zvidky;
+    //    element.Zvidky = element.Kudy;
+    //    element.Kudy = temp;
+    //}
+
+    Poshuk element = new Poshuk { Zvidky = "", Kudy = "", /*Data = DateTime.Today */};
+
+    public class Poshuk
+    {
+        public string? Zvidky { get; set; }
+        public string? Kudy { get; set; }
+        //public DateTime Data { get; set; }
+    }
+
+    private void l()
+    {
+        NavManager.NavigateTo("login");
+    }
+
+    //private void k()
+    //{
+
+    //	var train = new Train()
+    //		{
+    //			Z_K = "Київ / Ужгород",
+    //			Date = DateTime.Parse("2023-01-01"),
+    //			V_P = "9:30 - 19:00",
+    //			VM = 46,
+    //			Sum = 140
+    //		};
+
+    //	context.Trains.Add(train);
+    //	context.SaveChanges();
+    //}
+
+    void p()
+    {
+        NavManager.NavigateTo("payment");
+    }
+
+    void pc()
+    {
+        NavManager.NavigateTo("personal_cabinet");
+    }
+
+    void i()
+    {
+        NavManager.NavigateTo("issuing_tickets");
+    }
+
+    void sus()
+    {
+        NavManager.NavigateTo("success");
+    }
+
+    //private TicketContext[]? context;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //	context = await TicketDB.GetTrainsbdAsync(DateTime.Now);
+    //}
+
+    //bool IsTableVisible = true;
+
+    //private void s()
+    //{
+    //    ////bool IsTableVisible = false;
+    //    ////StateHasChanged();
+    //    //bool FilterFunc(Train train)
+    //    //{
+    //    //    if (string.IsNullOrWhiteSpace(element.Zvidky) /*|| string.IsNullOrWhiteSpace(element.Kudy)*/)
+    //    //        return true;
+    //    //    if (train.Z_K.Contains(element.Zvidky, StringComparison.OrdinalIgnoreCase) /*|| train.Z_K.Contains(element.Kudy, StringComparison.OrdinalIgnoreCase)*/)
+    //    //        return true;
+    //    //    //if (train.Z_K.Contains(element.Zvidky, StringComparison.OrdinalIgnoreCase) /*|| train.Z_K.Contains(element.Kudy, StringComparison.OrdinalIgnoreCase)*/)
+    //    //    //    return true;
+    //    //    if ($"{train.Z_K}".Contains(element.Zvidky) /*|| $"{train.Z_K}".Contains(element.Kudy)*/)
+    //    //        return true;
+    //    //    return false;
+    //    //}
+    //}
+
+    //private bool FilterFunc(Train train)
+    //{
+    //    if (string.IsNullOrWhiteSpace(element.Zvidky) /*|| string.IsNullOrWhiteSpace(element.Kudy)*/)
+    //        return true;
+    //    if (train.Z_K.Contains(element.Zvidky, StringComparison.OrdinalIgnoreCase) /*|| train.Z_K.Contains(element.Kudy, StringComparison.OrdinalIgnoreCase)*/)
+    //        return true;
+    //    if (train.Z_K.Contains(element.Zvidky, StringComparison.OrdinalIgnoreCase) /*|| train.Z_K.Contains(element.Kudy, StringComparison.OrdinalIgnoreCase)*/)
+    //        return true;
+    //    if ($"{train.Z_K}".Contains(element.Zvidky) /*|| $"{train.Z_K}".Contains(element.Kudy)*/)
+    //        return true;
+    //    return false;
+    //}
+
+    bool FilterFunc(Train train)
+    {
+        if (string.IsNullOrWhiteSpace(element.Zvidky) && string.IsNullOrWhiteSpace(element.Kudy))
+            return true;
+        if (train.Z_K.Contains(element.Zvidky, StringComparison.OrdinalIgnoreCase) && train.Z_K.Contains(element.Kudy, StringComparison.OrdinalIgnoreCase))
+            return true;
+        //if (train.Z_K.Contains(element.Zvidky, StringComparison.OrdinalIgnoreCase) /*|| train.Z_K.Contains(element.Kudy, StringComparison.OrdinalIgnoreCase)*/)
+        //    return true;
+        if ($"{train.Z_K}".Contains(element.Zvidky) && $"{train.Z_K}".Contains(element.Kudy))
+            return true;
+        return false;
+    }
+
+    List<Train> GetTrain = new List<Train>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetTrain = await DbContext.Trains.ToListAsync();
+    }
+
+    private Train selectedItem1;
+    private HashSet<Train> selectedItems = new HashSet<Train>();
+    //var serializedModel = JsonConvert.SerializeObject(selectedItem1);
+
+    //private string id;
+    ////private Train selectedItem;
+
+    //protected override void OnInitialized()
+    //{
+    ////    var uri = new Uri(NavManager.Uri);
+    ////    var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+    ////    id = query["id"];
+    //    //selectedItem1 = GetTrain.FirstOrDefault(x => x.ID == int.Parse(id));
+    //    //SelectedItemsService.SelectedItem = selectedItem1;
+    //}
+
+}

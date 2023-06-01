@@ -1,0 +1,146 @@
+﻿@page "/view"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext DbContext
+@*@using Microsoft.JSInterop;
+@using System.Text;
+@using Microsoft.AspNetCore.Components.Web*@
+
+<PageTitle>View</PageTitle>
+
+<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Tertiary" Href="@item.Href">@item.Text.ToUpper()</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Посадочний документ</MudText>
+ 
+<br />
+
+<MudTable Items="GetTicket.Take(1)" Hover="true" Elevation="0">
+    <HeaderContent>
+        <MudTh>Прізвище</MudTh>
+        <MudTh>Ім'я</MudTh>
+        <MudTh>№ потяга</MudTh>
+        <MudTh>Звідки / Куди</MudTh>
+        <MudTh>Дата</MudTh>
+        <MudTh>Відправлення / Прибуття</MudTh>
+        <MudTh>Тип документа</MudTh>
+        <MudTh>Послуги</MudTh>
+        <MudTh>Сума, грн</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Прізвище">Шевченко</MudTd>
+        <MudTd DataLabel="Ім'я">Юлія</MudTd>
+        <MudTd DataLabel="№ потяга">13</MudTd>
+        <MudTd DataLabel="Звідки / Куди">Київ / Білгород</MudTd>
+        <MudTd DataLabel="Дата">2023-05-26</MudTd>
+        <MudTd DataLabel="Відправлення / Прибуття">2:45 - 4:30</MudTd>
+        <MudTd DataLabel="Тип документа">Студентський</MudTd>
+        <MudTd DataLabel="Послуги">Настільна білизна, Напій, Бізнес-ланч</MudTd>
+        <MudTd DataLabel="Сума, грн">280</MudTd>
+    </RowTemplate>
+</MudTable>
+
+<MudStack Row="true" AlignItems="AlignItems.Center">
+    <MudStack>
+        <MudStack >
+            <MudImage Src="Totally_not_a_Rickroll_QR_code.png" Alt="Посадочний документ" />
+        </MudStack>
+    </MudStack>
+    <MudStack>
+        <MudText Color="Color.Inherit">
+            Цей Посадочний документ є підставою для проїзду без звернення у касу.
+        </MudText>
+        <MudText Color="Color.Inherit">
+            Посадочний документ являється розрахунковим документом.
+        </MudText>
+        <MudText Color="Color.Inherit">
+            Для користування цим білетом, зробіть його скріншот і збережіть.
+        </MudText>
+    </MudStack>
+</MudStack>
+
+@*<MudButton OnClick="CaptureScreenshot">Capture Screenshot</MudButton>
+*@
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("← До корзини", href: "basket"),
+    };
+
+    void u()
+    {
+        NavManager.NavigateTo("/");
+    }
+
+    //private TrainsBD[]? trainsbd;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    trainsbd = await TrainsbdService.GetTrainsbdAsync(DateTime.Now);
+    //}
+
+    List<Ticket> GetTicket = new List<Ticket>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetTicket = await DbContext.Tickets.ToListAsync();
+    }
+
+    //[Inject]
+    //private IJSRuntime jsRuntime { get; set; }
+
+    //private async Task TakeScreenshot()
+    //{
+    //    // Call the JavaScript interop function to take the screenshot
+    //    var imageData = await jsRuntime.InvokeAsync<string>("takeScreenshot");
+
+    //    // Convert the base64 image data to a byte array
+    //    byte[] imageBytes = Convert.FromBase64String(imageData);
+
+    //    // Save the image bytes as a file
+    //    var fileName = "screenshot.png";
+    //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+    //    await File.WriteAllBytesAsync(filePath, imageBytes);
+    //}
+   
+
+
+    //[Inject] public IJSRuntime JS { get; set; }
+
+    //private async Task CaptureScreenshot()
+    //{
+    //    // Get the screen dimensions
+    //    int screenWidth = (int)await JS.InvokeAsync<double>("eval", "window.screen.width");
+    //    int screenHeight = (int)await JS.InvokeAsync<double>("eval", "window.screen.height");
+
+    //    // Open a new window with the screenshot image
+    //    await JS.InvokeVoidAsync("open", "about:blank", "screenshot", $"width={screenWidth},height={screenHeight}");
+    //    // Get the new window object
+    //    var windowObjectReference = await JS.InvokeAsync<IJSObjectReference>("eval", "window.screenshot");
+
+    //    // Get the HTML content of the current page
+    //    var htmlContent = await JS.InvokeAsync<string>("eval", "document.documentElement.innerHTML");
+
+    //    // Create a new image element and set its source to the HTML content
+    //    var imageElementReference = await windowObjectReference.InvokeAsync<IJSObjectReference>("eval", "document.createElement('img')");
+    //    await imageElementReference.InvokeVoidAsync("setAttribute", "src", $"data:image/png;base64,{await ToBase64(htmlContent)}");
+
+    //    // Append the image element to the new window
+    //    await windowObjectReference.InvokeVoidAsync("document.body.appendChild", await imageElementReference.InvokeAsync<IJSObjectReference>("cloneNode", true));
+        
+    //    // Download the image
+    //    await windowObjectReference.InvokeVoidAsync("navigator.clipboard.writeText", await JS.InvokeAsync<string>("eval", "window.btoa('" + htmlContent + "')"));
+    //}
+
+    //private async Task<string> ToBase64(string input)
+    //{
+    //    var byteArray = Encoding.UTF8.GetBytes(input);
+    //    return Convert.ToBase64String(byteArray);
+    //}
+
+
+}

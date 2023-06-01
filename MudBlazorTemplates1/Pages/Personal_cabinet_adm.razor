@@ -1,0 +1,332 @@
+﻿@page "/personal_cabinet_adm"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data
+@inject TicketContext DbContext
+@inject NavigationManager NavManager
+@using MudTrain.Models;
+@inject ISnackbar Snackbar
+
+<PageTitle>Personal_cabinet.razor</PageTitle>
+
+<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Tertiary" Href="@item.Href">@item.Text.ToUpper()</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Особистий кабінет адміністратора</MudText>
+
+<br /><br />
+
+<MudStack AlignItems="AlignItems.Center">
+ <MudTabs Rounded="true" Outlined="true" Color="Color.Tertiary" Centered>
+        <MudTabPanel Text="Особисті дані">
+
+        <br /><br />
+
+        <MudStack AlignItems="AlignItems.Center">
+        <MudItem xs="10">
+            <MudTextField @bind-Value="@element.Email" Label="Телефон" Variant="Variant.Outlined" Margin="Margin.Dense" Mask="@emailMask" />
+            <MudTextField @bind-Value="@element.Password" Label="Пароль" Variant="Variant.Outlined" Margin="Margin.Dense" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+            <MudTextField @bind-Value="@element.Password1" Label="Підтвердіть пароль" Variant="Variant.Outlined" Margin="Margin.Dense" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+            <MudTextField @bind-Value="@element.Surname" Label="Прізвище" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@element.Name" Label="Ім'я" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@element.Phone" Label="Телефон" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        </MudItem>
+
+@*        <MudStack Row="true">
+             <MudCheckBox @bind-Checked="@Label_CheckBox1" Label="Я студент" Color="Color.Tertiary"></MudCheckBox>
+             <MudCheckBox @bind-Checked="@Label_CheckBox2" Label="Я пільговик" Color="Color.Tertiary"></MudCheckBox>
+        </MudStack>*@
+
+         <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="u1" Color="Color.Tertiary">Зберегти</MudButton>
+
+                <MudMessageBox @ref="mbox" CancelText="Не зберігати">
+                    <MessageContent>
+                        Зберегти зміни, внесені в особисті дані?
+                    </MessageContent>
+                    <YesButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="@(() => { u2(); Snackbar.Add("Зміни збережено, Severity.Success"); })">Зберегти</MudButton>
+                    </YesButton>
+                </MudMessageBox>
+
+         </MudStack>
+
+    </MudTabPanel>
+    <MudTabPanel Text="Маршрути">
+            <MudTable FixedHeader="@fixed_header" Filter="new Func<Train,bool>(FilterFunc)" Items="GetTrain" Hover="true" Elevation="0" @bind-SelectedItem="selectedItem1" CommitEditTooltip="Commit Edit"
+                      OnCommitEditClick="@(() => Snackbar.Add("Зміни збережено"))" RowEditCancel="ResetItemToOriginalValues" IsEditRowSwitchingBlocked="true">
+                <ToolBarContent>
+                    @*<a class="btn btn-sm btn-success" @onclick="(e => CreateAsync())">
+                        <i class="fas fa-plus"></i> New
+                    </a>
+                    <MudSpacer />*@
+@*                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="(() => AddData(context))">  </MudIconButton>
+
+*@                    
+@*                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="AddData"></MudIconButton>
+                    <MudText>Додати маршрут</MudText>
+                    <MudSpacer />*@
+                    <MudTextField @bind-Value="searchString" Placeholder="Пошук" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <ColGroup>
+                        <col style="width:50px;" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh>№ потяга</MudTh>
+                    <MudTh>Звідки / Куди</MudTh>
+                    <MudTh>Дата</MudTh>
+                    <MudTh>Відправлення / Прибуття</MudTh>
+                    <MudTh>Вільних місць</MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="№ потяга">@context.ID</MudTd>
+                    <MudTd DataLabel="Звідки / Куди">@context.Z_K</MudTd>
+                    <MudTd DataLabel="Дата">@context.Date</MudTd>
+                    <MudTd DataLabel="Відправлення / Прибуття">@context.V_P</MudTd>
+                    <MudTd DataLabel="Вільних місць">@context.VM</MudTd>
+                    <MudTd DataLabel="">
+@*                      <MudButton OnClick="@((e) => DeleteTrain(@context.ID, @context.Z_K))" Variant="Variant.Filled" Color="Color.Error">Delete Records</MudButton>*@                        
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Inherit" OnClick="() => DeleteData(context)"> </MudIconButton>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent> 
+                    <MudText>На Ваш запит не було знайдено жодного маршруту.</MudText>
+                    <MudText>Переконайтеся, що всі слова написані правильно.</MudText>
+                    <MudText>Якщо помилок не було виявлено - по заданому Вами напрямку місць немає, але ви можете переглянути маршрути з пересадкою.</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Завантаження...</MudText>
+                </LoadingContent>
+                <RowEditingTemplate>
+                    <MudTd DataLabel="№ потяга">@context.ID</MudTd>
+                    <MudTd DataLabel="Звідки / Куди">
+                        <MudTextField @bind-Value="@context.Z_K" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Дата">
+                        <MudNumericField @bind-Value="@context.Date" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Відправлення / Прибуття">
+                        <MudTextField @bind-Value="@context.V_P" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Вільних місць">
+                        <MudTextField @bind-Value="@context.VM" Required />
+                    </MudTd>
+                </RowEditingTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{10, 20}" />
+                </PagerContent>
+            </MudTable>
+
+@*            <MudDialog @bind-IsOpen="@isFormOpen">
+                <Content>
+                    <YourFormComponent OnSubmit="@(() => AddToDatabase())" />
+                </Content>
+            </MudDialog>*@
+    </MudTabPanel>
+    <MudTabPanel Text="Новий маршрут">
+            <br />
+        <MudStack AlignItems="AlignItems.Center">
+            <MudItem >
+                <MudTextField @bind-Value="@element.Z_K" Label="Звідки / Куди" HelperText="Напр., А / В" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudTextField @bind-Value="@element.Date" Format="yyyy-MM-dd" Label="Дата відправлення" Variant="Variant.Outlined" Margin="Margin.Dense" InputType="InputType.Date" />
+                <MudTextField @bind-Value="@element.V_P" Label="Відправлення - Прибуття" HelperText="Напр., 0:00 - 12:00" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudTextField @bind-Value="@element.VM" Label="Кількість місць" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudTextField @bind-Value="@element.Sum" Label="Ціна квитка" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+@*            <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="u" Color="Color.Tertiary" >Додати</MudButton>
+*@            <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Tertiary" @onclick="@(() => { u(); Snackbar.Add("Зміни збережено, Severity.Success"); })">Додати</MudButton>
+        </MudStack>
+    </MudTabPanel>
+</MudTabs>
+</MudStack>
+
+@code {
+    
+
+    MudMessageBox mbox { get; set; } = default!;
+
+    private async void u1()
+    {
+        bool? result = await mbox.Show();
+    }
+
+    void u2()
+    {
+        /*тут треба щоб зміни зберігалися*/
+    }
+
+    public bool Label_CheckBox1 { get; set; } = false;
+    public bool Label_CheckBox2 { get; set; } = false;
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("← На головну", href: "#"),
+    };
+
+    S element = new S { Email = "admin@gmail.com", Password = "root12345678", Password1 = "root12345678", Surname = "Адміненко", Name = "Адмін", Phone = "+380967833790", Z_K = "", Date = "", V_P = "", VM = "", Sum = "" };
+
+    public class S
+    {
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? Password1 { get; set; }
+        public string? Surname { get; set; }
+        public string? Name { get; set; }
+        public string? Phone { get; set; }
+
+        public string? Z_K { get; set; }
+        public string? Date { get; set; }
+        public string? V_P { get; set; }
+        public string? VM { get; set; }
+        public string? Sum { get; set; }
+    }
+
+    public IMask emailMask = RegexMask.Email();
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    bool fixed_header = true;
+
+    private string searchString = "";
+
+    bool FilterFunc(Train train)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (train.Z_K.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{train.Z_K}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    List<Train> GetTrain = new List<Train>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GetTrain = await DbContext.Trains.ToListAsync();
+    }
+
+    private Train selectedItem1 = null;
+    private HashSet<Train> selectedItems1 = new HashSet<Train>();
+
+    private Train elementBeforeEdit;
+
+    private void ResetItemToOriginalValues(object train)
+    {
+        ((Train)train).ID = elementBeforeEdit.ID;
+        ((Train)train).Z_K = elementBeforeEdit.Z_K;
+        ((Train)train).Date = elementBeforeEdit.Date;
+        ((Train)train).V_P = elementBeforeEdit.V_P;
+        ((Train)train).VM = elementBeforeEdit.VM;
+        ((Train)train).Sum = elementBeforeEdit.Sum;
+    }
+
+    //private async Task CreateAsync()
+    //{
+    //    var parameters = new DialogParameters();
+    //    parameters.Add("train", new Train());
+
+    //    var dialog = await _dialogService.Show<AddOrUpdateDialog>("Створити новий маршрут", parameters).Result;
+
+    //    if (dialog.Data != null)
+    //    {
+    //        Train newTrain = dialog.Data as Train;
+
+    //        Train.InsertApp(Train);
+
+    //        //NavigationManager.NavigateTo("Groups");
+    //    }
+    //}
+
+
+    //bool isFormOpen = false;
+
+    //void AddData(Train train)
+    //{
+    //    // Open the form and pass in the item data
+    //    isFormOpen = true;
+    //}
+
+    //void AddToDatabase()
+    //{
+    //    // Add the data to the database using EF Core DbContext
+    //    // Reload the data from the database
+    //    // Close the form
+    //    isFormOpen = false;
+    //}
+
+    //private void AddData()
+    //{
+    //    // Create a new data object
+    //    Train train = new Train();
+
+    //    // Add the new data to the list
+    //    GetTrain.Add(train);
+    //    DbContext.Add(train);
+    //    // Insert the new data into the database using EF Core
+    //    DbContext.Trains.Add(train);
+    //    DbContext.SaveChanges();
+    //}
+
+    //private async Task AddData(Train train)
+    //{
+    //    DbContext.Add(train);
+    //    DbContext.Trains.Add(train);
+    //    await DbContext.SaveChangesAsync();
+    //}
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+    private async Task DeleteData(Train train)
+    {
+        bool result = (await DialogService.ShowMessageBox(
+        "Підтвердження видалення",
+        "Ви впевнені, що хочете видалити цей маршрут?",
+        yesText: "Видалити",
+        noText: "Скасувати")) ?? false;
+
+        if (result)
+        {
+            DbContext.Remove(train);
+            DbContext.Trains.Remove(train);
+            await DbContext.SaveChangesAsync();
+            Snackbar.Add("Зміни збережено, Severity.Success");
+        }
+    }
+
+    void u()
+    {
+        var train = new Train()
+            {
+                Z_K = element.Z_K,
+                Date = DateTime.Parse(element.Date),
+                V_P = element.V_P,
+                VM = int.Parse(element.VM),
+                Sum = int.Parse(element.Sum)
+            };
+
+        DbContext.Trains.Add(train);
+        DbContext.SaveChanges();
+    }
+}

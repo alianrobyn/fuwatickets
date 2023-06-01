@@ -1,0 +1,105 @@
+﻿@page "/payment"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext DbContext
+
+<PageTitle>Payment</PageTitle>
+
+<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Tertiary" Href="@item.Href">@item.Text.ToUpper()</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Оплата квитків</MudText>
+ 
+<br />
+
+@*@if (trainsbd == null)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else
+{*@
+<MudTable Items="GetTicket.Take(1)" Hover="true" SortLabel="Sort By" Elevation="0">
+        <HeaderContent>
+            <MudTh>Прізвище</MudTh>
+            <MudTh>Ім'я</MudTh>
+            <MudTh>№ потяга</MudTh>
+            <MudTh>Звідки / Куди</MudTh>
+            <MudTh>Дата</MudTh>
+            <MudTh>Відправлення / Прибуття</MudTh>
+            <MudTh>Тип документа</MudTh>
+            <MudTh>Послуги</MudTh>
+            <MudTh>Сума, грн</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Прізвище">Шевченко</MudTd>
+            <MudTd DataLabel="Ім'я">Юлія</MudTd>
+            <MudTd DataLabel="№ потяга">13</MudTd>
+            <MudTd DataLabel="Звідки / Куди">Київ / Білгород</MudTd>
+            <MudTd DataLabel="Дата">2023-05-26</MudTd>
+            <MudTd DataLabel="Відправлення / Прибуття">2:45 - 4:30</MudTd>
+            <MudTd DataLabel="Тип документа">Студентський</MudTd>
+            <MudTd DataLabel="Послуги">Настільна білизна, Напій, Бізнес-ланч</MudTd>
+            <MudTd DataLabel="Сума, грн">280</MudTd>
+@*            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd>
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="GoToGroups">Groups</button>
+                    <button class="btn btn-primary btn-sm" @onclick="() => ShowApplication(context.Id)">
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                </MudTd>
+            </RowTemplate>*@
+        </RowTemplate>
+    </MudTable>
+
+<br />
+<br />
+
+<MudStack AlignItems="AlignItems.Center">
+    <MudItem xs="7">
+        <MudPaper Class="mx-auto pa-6">
+            <MudStack Spacing="4">
+                <MudTextField T="string" Label="Нормер карти" Mask="@(new PatternMask("0000 0000 0000 0000"))" />
+                <MudStack Row="true">
+                    <MudTextField T="string" Label="ММ / YY" Mask="@(new DateMask("MM/YY", 'Y', 'M'))" />
+                    <MudTextField T="string" Label="CVV" Mask="@(new PatternMask("000"))" />
+                </MudStack>
+                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="u" DisableElevation="true">Сплатити</MudButton>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudStack>
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("← До корзини", href: "basket"),
+    };
+
+    AlignItems _align = AlignItems.Center;
+
+    void u()
+    {
+        NavManager.NavigateTo("/success");
+    }
+
+    //private TrainsBD[]? trainsbd;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    trainsbd = await TrainsbdService.GetTrainsbdAsync(DateTime.Now);
+    //}
+
+    List<Ticket> GetTicket = new List<Ticket>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetTicket = await DbContext.Tickets.ToListAsync();
+    }
+}

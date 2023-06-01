@@ -1,0 +1,85 @@
+﻿@page "/login_adm"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext context
+
+
+<PageTitle>Login</PageTitle>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Сторінка авторизації адміністратора</MudText>
+
+<br />
+<br />
+<MudStack AlignItems="AlignItems.Center">
+	<MudItem xs="4">
+		<MudTextField Mask="@emailMask" @bind-Value="@element.Email" Label="E-mail" HelperText="user@domain.com" Variant="Variant.Outlined" Margin="Margin.Dense" />
+		<MudTextField @bind-Value="@element.Password" Label="Пароль" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+	</MudItem>
+
+@*	<MudStack Row="true">
+		<MudCheckBox @bind-Checked="@Label_CheckBox1" Label="Я студент" Color="Color.Tertiary"></MudCheckBox>
+		<MudCheckBox @bind-Checked="@Label_CheckBox2" Label="Я пільговик" Color="Color.Tertiary"></MudCheckBox>
+	</MudStack>*@
+
+	<div class="d-flex">
+		<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="u" Color="Color.Tertiary" Style="width: 150px;">Увійти</MudButton>
+	</div>
+@*	<MudLink Href="registration_adm" Color="Color.Tertiary" Underline="Underline.Always">Зареєструватися</MudLink>
+*@</MudStack>
+
+@code {
+	L element = new L { Email = "", Password = "" };
+
+	public class L
+	{
+		public string? Email { get; set; }
+		public string? Password { get; set; }
+	}
+
+	public IMask emailMask = RegexMask.Email();
+
+	bool isShow;
+	InputType PasswordInput = InputType.Password;
+	string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+	void ButtonTestclick()
+	{
+		@if (isShow)
+		{
+			isShow = false;
+			PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+			PasswordInput = InputType.Password;
+		}
+		else
+		{
+			isShow = true;
+			PasswordInputIcon = Icons.Material.Filled.Visibility;
+			PasswordInput = InputType.Text;
+		}
+	}
+
+	AlignItems _align = AlignItems.Center;
+
+	//public bool Label_CheckBox1 { get; set; } = false;
+	//public bool Label_CheckBox2 { get; set; } = false;
+
+	void u()
+	{
+		NavManager.NavigateTo("/personal_cabinet_adm");
+		//var user = new User()
+		//	{
+		//		//Z_K = "Київ / Ужгород",
+		//		//Date = DateTime.Parse("2023-01-01"),
+		//		//V_P = "9:30 - 19:00",
+		//		//VM = 46,
+		//		//Sum = 140
+		//		Email = "",
+		//		Password = ""
+		//	};
+
+		//context.Users.Add(user);
+		//context.SaveChanges();
+	}
+}

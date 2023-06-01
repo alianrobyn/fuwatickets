@@ -1,0 +1,254 @@
+﻿@page "/issuing_tickets"
+@using Microsoft.EntityFrameworkCore;
+@using MudTrain.Data;
+@using MudTrain.Models;
+@inject NavigationManager NavManager
+@inject TicketContext DbContext
+
+
+<PageTitle>Issuing_tickets</PageTitle>
+
+<MudBreadcrumbs Items="_items">
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Tertiary" Href="@item.Href">@item.Text.ToUpper()</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+<MudText Align="Align.Center" Color="Color.Tertiary" Typo="Typo.h4">Оформлення квитків</MudText>
+
+ <br /> <br />
+
+@*@if (trainsbd == null)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else
+{
+    <MudTable Items="trainsbd.Take(1)" Hover="true" SortLabel="Sort By" Elevation="0">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.N)">№ потяга</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.Z_K!)">Звідки / Куди</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TrainsBD, object>(x=>x.Date)">Дата</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TrainsBD, object>(x=>x.V_P!)">Відправлення / Прибуття</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="№ потяга">@context.N</MudTd>
+            <MudTd DataLabel="Звідки / Куди">@context.Z_K</MudTd>
+            <MudTd DataLabel="Дата">@context.Date</MudTd>
+            <MudTd DataLabel="Відправлення / Прибуття">@context.V_P</MudTd>
+        </RowTemplate>
+    </MudTable>
+}*@
+
+<MudTable Items="GetTrain.Take(1)" Hover="true" Elevation="0">
+    <HeaderContent>
+        <MudTh>№ потяга</MudTh>
+        <MudTh>Звідки / Куди</MudTh>
+        <MudTh>Дата</MudTh>
+        <MudTh>Відправлення / Прибуття</MudTh>
+        <MudTh>Сума</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="№ потяга">13</MudTd>
+        <MudTd DataLabel="Звідки / Куди">Київ / Білгород</MudTd>
+        <MudTd DataLabel="Дата">2023-05-26</MudTd>
+        <MudTd DataLabel="Відправлення / Прибуття">2:45 - 4:30</MudTd>
+        <MudTd DataLabel="Сума">340</MudTd>
+    </RowTemplate>
+    <LoadingContent>
+        <MudText>Завантаження...</MudText>
+    </LoadingContent>
+</MudTable>
+
+<br /> <br />
+
+<MudText Color="Color.Dark" Typo="Typo.h5">Введіть дані пасажирів</MudText>
+
+@*<MudText Color="Color.Tertiary" Typo="Typo.h5">Пасажир 1</MudText>*@
+
+     <MudStack Row="true">
+     <MudTextField @bind-Value="@element.Surname" Label="Прізвище" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+     <MudTextField @bind-Value="@element.Name" Label="Ім'я" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+      </MudStack>
+
+     <br />
+
+     @*<MudStack Row="true">
+     <MudText Color="Color.Dark">Тип документу:</MudText>
+     <MudSpacer />
+     <MudText Color="Color.Dark">Послуги:</MudText>
+     <MudSpacer />
+     <MudText Color="Color.Dark">Ціна: 300 грн.</MudText>
+     <MudSpacer /> 
+     </MudStack>*@
+    <MudStack Row="true">
+    <MudStack>
+        <MudText Color="Color.Inherit">Тип документу:</MudText>
+          <MudRadioGroup @bind-SelectedOption="@SelectedOption">
+            <MudRadio Option="@("Radio1")" Color="Color.Tertiary">Повний</MudRadio><br />
+            <MudRadio Option="@("Radio2")" Color="Color.Tertiary">Студентський</MudRadio><br />
+            <MudRadio Option="@("Radio3")" Color="Color.Tertiary">Дитячий</MudRadio><br />
+            <MudRadio Option="@("Radio4")" Color="Color.Tertiary">Пільговий</MudRadio><br />
+        </MudRadioGroup>
+        </MudStack>
+
+         <MudStack>
+        <MudText Color="Color.Inherit">Послуги:</MudText>
+        <MudCheckBox @bind-Checked="@Label_CheckBox1" Label="Настільна білизна" Color="Color.Tertiary"></MudCheckBox>
+        <MudCheckBox @bind-Checked="@Label_CheckBox2" Label="Напій" Color="Color.Tertiary"></MudCheckBox>
+        <MudCheckBox @bind-Checked="@Label_CheckBox3" Label="Бізнес-ланч" Color="Color.Tertiary"></MudCheckBox>
+         </MudStack>
+    @if (SelectedOption == "Radio1" && Label_CheckBox1 == true && Label_CheckBox2 == true && Label_CheckBox3 == true)
+    {
+        <MudText Color="Color.Inherit">Ціна: 450 грн.</MudText>
+    }
+
+    else if (SelectedOption == "Radio2" || SelectedOption == "Radio3" || SelectedOption == "Radio4" && Label_CheckBox1 == true && Label_CheckBox2 == true && Label_CheckBox3 == true)
+    {
+        <MudText Color="Color.Inherit">Ціна: 280 грн.</MudText>
+    }
+    </MudStack>
+
+ @*<br />*@
+
+@*  <MudStack Row="true">
+    <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Tertiary">Додати пасажира</MudButton>
+    <MudSpacer />
+    <MudText Color="Color.Dark">Загальна вартість: ___ грн.</MudText>
+   </MudStack>*@
+
+   <br />
+
+    <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="b1" Color="Color.Tertiary">В кошик</MudButton>
+
+@*    <MudChip>@state</MudChip>*@
+
+    <MudMessageBox @ref="mbox" Title="Попередження" CancelText="Скасувати">
+        <MessageContent>
+            В потязі перевірятиметься посвідчення, що доказує, що ви є студентом/пільговиком/дитиною. Якщо його не буде або воно виявиться неправдивим, з вас буде знято штраф.
+        </MessageContent>
+        <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="b3">Гаразд</MudButton>
+        </YesButton>
+    </MudMessageBox>
+
+    <MudMessageBox @ref="mbox1" Title="" CancelText="Скасувати">
+        <MessageContent>
+            Перед замовленням квитка, будь ласка, авторизуйтесь.
+        </MessageContent>
+        <YesButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="b4">Гаразд</MudButton>
+        </YesButton>
+    </MudMessageBox>
+
+@code {
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("← На головну", href: "#"),
+    };
+
+    MudMessageBox mbox { get; set; } = default!;
+
+    private async void b1()
+    {
+        bool? result = await mbox.Show();
+    }
+
+    //void b2()
+    //{
+    //    var ticket = new Ticket()
+    //        {
+    //            Surname = element.Surname,
+    //            Name = element.Name,
+    //        };
+
+    //    NavManager.NavigateTo("basket");
+    //}
+
+    MudMessageBox mbox1 { get; set; } = default!;
+
+    private async void b3()
+    {
+        bool? result = await mbox1.Show();
+    }
+
+    void b4()
+    {
+        NavManager.NavigateTo("basket");
+    }
+
+    public string SelectedOption { get; set; } = default!;
+
+    public bool Label_CheckBox1 { get; set; } = true;
+    public bool Label_CheckBox2 { get; set; } = true;
+    public bool Label_CheckBox3 { get; set; } = true;
+
+    
+    IT element = new IT { Surname = "", Name = ""};
+
+    public class IT
+    {
+        public string? Surname { get; set; }
+        public string? Name { get; set; }
+    }
+
+    //private TrainsBD[]? trainsbd;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    trainsbd = await TrainsbdService.GetTrainsbdAsync(DateTime.Now);
+    //}
+
+    void MethodToTriggerUrl()
+    {
+        NavManager.NavigateTo("login");
+    }
+
+    List<Train> GetTrain = new List<Train>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetTrain = await DbContext.Trains.ToListAsync();
+    }
+
+    [Parameter] public int Suma { get; set;}
+
+    //private Train selectedItem1;
+    //private HashSet<Train> selectedItems = new HashSet<Train>();
+
+    //private string id;
+    ////private Train selectedItem;
+
+    //protected override void OnInitialized()
+    //{
+    //    //    var uri = new Uri(NavManager.Uri);
+    //    //    var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+    //    //    id = query["id"];
+    //    selectedItem1 = GetTrain.FirstOrDefault(x => x.ID == int.Parse(id));
+    //}
+
+    //public class SelectedItemsService
+    //{
+    //    public Train SelectedItem { get; set; }
+    //}
+
+    //protected override void OnInitialized()
+    //{
+    //    var idString = NavManager.Uri.Split('/').Last();
+    //    if (int.TryParse(idString, out int id))
+    //    {
+    //        SelectedItemId = id;
+    //    }
+    //}
+
+
+
+    //private Train selectedItem;
+
+    //protected override void OnInitialized()
+    //{
+    //    selectedItem = SelectedItemsService.SelectedItem;
+    //}
+
+
+}
